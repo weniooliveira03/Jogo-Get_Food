@@ -46,11 +46,14 @@ def reiniciar():
 while True:
     tela.fill((cor_tela))
 
-    m_inicio1 = f'Para jogar tecle espaço'
+    m_inicio1 = f'COMEÇAR'
     m_inicio2 = f'Controle o jogo usando "K" e "L"'
 
     exibir_m_inicio1 = fonte_inicio.render(m_inicio1, True, (255, 255, 255))
     exibir_m_inicio2 = fonte_inicio.render(m_inicio2, True, (255, 255, 255))
+
+    mouse = pygame.mouse.get_pos()
+    botao_iniciar = pygame.draw.rect(tela, (0, 66, 0), (100, 275, 200, 50))
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -59,9 +62,13 @@ while True:
         if event.type == KEYDOWN:
             if event.key == K_SPACE:
                 iniciar = True
+        if event.type == MOUSEBUTTONDOWN:
+            if event.button == BUTTON_LEFT:
+                if (100 < mouse[0] < 300) and (275 < mouse[1] < 325):
+                    iniciar = True
 
-    tela.blit(exibir_m_inicio1, (30, 265))
-    tela.blit(exibir_m_inicio2, (30, 315))
+    tela.blit(exibir_m_inicio1, (150, 290))
+    tela.blit(exibir_m_inicio2, (40, 350))
 
     pygame.display.update()
 
