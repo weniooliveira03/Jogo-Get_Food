@@ -8,7 +8,7 @@ pygame.init()
 largura = 400
 altura = 600
 
-x = 160
+x_personagem = 160
 
 x_comida = (randint(0, 9)) * 40
 y_comida = 0
@@ -35,7 +35,6 @@ iniciar = False
 
 
 def botao(cor_botao, posicao_tamanho, texto_botao, cor_mensagem, posicao_mensagem):
-    global iniciar
     mouse = pygame.mouse.get_pos()
 
     exibir_sombra_botao = pygame.draw.rect(tela, (cor_botao[0] + 40, cor_botao[1] + 40, cor_botao[2] + 40), (posicao_tamanho))
@@ -53,36 +52,40 @@ def botao(cor_botao, posicao_tamanho, texto_botao, cor_mensagem, posicao_mensage
             
 
 def reiniciar():
-    global pontos, erros, perdeu, velocidade, level_pontos
+    global pontos, erros, perdeu, velocidade, level_pontos, iniciar
     pontos = 0
     erros = 0
     perdeu = False
     velocidade = 6
     level_pontos = 0
 
+def tela_inicio():
+    global iniciar
+
+    iniciar = False
+    reiniciar()
 
 while True:
     tela.fill((cor_tela))
 
-    m_inicio2 = f'Controle o jogo usando K e L'
+    m_inicio = f'Controle o jogo usando K e L'
 
-    exibir_m_inicio2 = fonte_inicio.render(m_inicio2, True, (255, 255, 255))
+    exibir_m_inicio = fonte_inicio.render(m_inicio, True, (255, 255, 255))
 
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             exit()
 
-    tela.blit(exibir_m_inicio2, (40, 350))
+    tela.blit(exibir_m_inicio, (50, 350))
 
-    if botao(
+    iniciar = botao(
         cor_botao = (0, 130, 0),
         posicao_tamanho = (100, 275, 200, 50),
         texto_botao = 'COMEÇAR',
         cor_mensagem = (255, 255, 255),
         posicao_mensagem = (150, 290)
-        ) == True:
-        iniciar = True
+        )
 
     pygame.display.update()
 
@@ -106,14 +109,14 @@ while True:
             if event.type == QUIT:
                 pygame.quit()
                 exit()
-            if event.type == KEYDOWN and x < 360:
+            if event.type == KEYDOWN and x_personagem < 360:
                 if event.key == K_RIGHT or event.key == K_l:
-                    x += 40
-            if event.type == KEYDOWN and x > 0:
+                    x_personagem += 40
+            if event.type == KEYDOWN and x_personagem > 0:
                 if event.key == K_LEFT or event.key == K_k:
-                    x -= 40
+                    x_personagem -= 40
 
-        destroy = pygame.draw.rect(tela, (0, 0, 255), (x, 560, 40, 40))
+        destroy = pygame.draw.rect(tela, (0, 0, 255), (x_personagem, 560, 40, 40))
         comida = pygame.draw.rect(tela, cores[cor], (x_comida, y_comida, 40, 40))
 
         if destroy.colliderect(comida):
@@ -150,6 +153,14 @@ while True:
                     posicao_mensagem = (135, 255)
                     ) == True:
                     reiniciar()
+                if botao(
+                    cor_botao = (150, 75, 0),
+                    posicao_tamanho = (100, 310, 200, 50),
+                    texto_botao = 'INÍCIO',
+                    cor_mensagem = (255, 255, 255),
+                    posicao_mensagem = (135, 325)
+                    ) == True:
+                    tela_inicio()
 
                 tela.blit(exibir_m_final1, (100, 150))
                 tela.blit(exibir_m_final2, (100, 190))
