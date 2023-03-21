@@ -36,6 +36,7 @@ iniciar = False
 
 def botao(cor_botao, posicao_tamanho, texto_botao, cor_mensagem, posicao_mensagem):
     global iniciar
+    mouse = pygame.mouse.get_pos()
 
     exibir_sombra_botao = pygame.draw.rect(tela, (cor_botao[0] + 40, cor_botao[1] + 40, cor_botao[2] + 40), (posicao_tamanho))
 
@@ -49,13 +50,14 @@ def botao(cor_botao, posicao_tamanho, texto_botao, cor_mensagem, posicao_mensage
         if event.button == BUTTON_LEFT:
             if (posicao_tamanho[0] < mouse[0] < (posicao_tamanho[0] + posicao_tamanho[2])) and (posicao_tamanho[1] < mouse[1] < (posicao_tamanho[1] + posicao_tamanho[3])):
                 return True
+            
 
 def reiniciar():
     global pontos, erros, perdeu, velocidade, level_pontos
     pontos = 0
     erros = 0
     perdeu = False
-    velocidade = 4
+    velocidade = 6
     level_pontos = 0
 
 
@@ -66,15 +68,10 @@ while True:
 
     exibir_m_inicio2 = fonte_inicio.render(m_inicio2, True, (255, 255, 255))
 
-    mouse = pygame.mouse.get_pos()   
-
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             exit()
-        if event.type == KEYDOWN:
-            if event.key == K_SPACE:
-                iniciar = True
 
     tela.blit(exibir_m_inicio2, (40, 350))
 
@@ -145,13 +142,17 @@ while True:
                     if event.type == QUIT:
                         pygame.quit()
                         exit()
-                    if event.type == KEYDOWN:
-                        if event.key == K_SPACE:
-                            reiniciar()
+                if botao(
+                    cor_botao = (0, 130, 0),
+                    posicao_tamanho = (100, 240, 200, 50),
+                    texto_botao = 'RECOMEÇAR',
+                    cor_mensagem = (255, 255, 255),
+                    posicao_mensagem = (135, 255)
+                    ) == True:
+                    reiniciar()
 
-                tela.blit(exibir_m_final1, (30, 230))
-                tela.blit(exibir_m_final2, (30, 280))
-                tela.blit(exibir_m_final3, (30, 330))
+                tela.blit(exibir_m_final1, (100, 150))
+                tela.blit(exibir_m_final2, (100, 190))
 
                 pygame.display.update()
 
