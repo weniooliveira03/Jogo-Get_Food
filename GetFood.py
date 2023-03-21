@@ -14,7 +14,7 @@ x_comida = (randint(0, 9)) * 40
 y_comida = 0
 velocidade = 6
 cores = ((255, 0, 0), (255, 0, 127), (255, 127, 0), (255, 255, 0), (0, 255, 0), (0, 255, 255), (127, 0, 255))
-cor = randint(0, 4) #cor = randint(0, 6)
+cor = randint(0, 6)
 
 pontos = 0
 level_pontos = 0
@@ -34,6 +34,22 @@ perdeu = False
 iniciar = False
 
 
+def botao(cor_botao, posicao_tamanho, texto_botao, cor_mensagem, posicao_mensagem):
+    global iniciar
+
+    exibir_sombra_botao = pygame.draw.rect(tela, (cor_botao[0] + 40, cor_botao[1] + 40, cor_botao[2] + 40), (posicao_tamanho))
+
+    exibir_botao = pygame.draw.rect(tela, (cor_botao), (posicao_tamanho[0] + 5, posicao_tamanho[1] + 5, posicao_tamanho[2] - 10, posicao_tamanho[3] - 10))
+    texto_botao = texto_botao
+
+    exibir_texto_botao = fonte_inicio.render(texto_botao, True, (cor_mensagem), (cor_botao))
+    tela.blit(exibir_texto_botao, (posicao_mensagem))
+
+    if event.type == MOUSEBUTTONDOWN:
+        if event.button == BUTTON_LEFT:
+            if (posicao_tamanho[0] < mouse[0] < (posicao_tamanho[0] + posicao_tamanho[2])) and (posicao_tamanho[1] < mouse[1] < (posicao_tamanho[1] + posicao_tamanho[3])):
+                return True
+
 def reiniciar():
     global pontos, erros, perdeu, velocidade, level_pontos
     pontos = 0
@@ -46,14 +62,11 @@ def reiniciar():
 while True:
     tela.fill((cor_tela))
 
-    m_inicio1 = f'COMEÇAR'
-    m_inicio2 = f'Controle o jogo usando "K" e "L"'
+    m_inicio2 = f'Controle o jogo usando K e L'
 
-    exibir_m_inicio1 = fonte_inicio.render(m_inicio1, True, (255, 255, 255))
     exibir_m_inicio2 = fonte_inicio.render(m_inicio2, True, (255, 255, 255))
 
-    mouse = pygame.mouse.get_pos()
-    botao_iniciar = pygame.draw.rect(tela, (0, 66, 0), (100, 275, 200, 50))
+    mouse = pygame.mouse.get_pos()   
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -62,13 +75,17 @@ while True:
         if event.type == KEYDOWN:
             if event.key == K_SPACE:
                 iniciar = True
-        if event.type == MOUSEBUTTONDOWN:
-            if event.button == BUTTON_LEFT:
-                if (100 < mouse[0] < 300) and (275 < mouse[1] < 325):
-                    iniciar = True
 
-    tela.blit(exibir_m_inicio1, (150, 290))
     tela.blit(exibir_m_inicio2, (40, 350))
+
+    if botao(
+        cor_botao = (0, 130, 0),
+        posicao_tamanho = (100, 275, 200, 50),
+        texto_botao = 'COMEÇAR',
+        cor_mensagem = (255, 255, 255),
+        posicao_mensagem = (150, 290)
+        ) == True:
+        iniciar = True
 
     pygame.display.update()
 
