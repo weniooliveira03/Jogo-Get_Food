@@ -13,7 +13,8 @@ x_personagem = 160
 x_comida = (randint(0, 9)) * 40
 y_comida = 0
 velocidade = 6
-cores = ((255, 0, 0), (255, 0, 127), (255, 127, 0), (255, 255, 0), (0, 255, 0), (0, 255, 255), (127, 0, 255))
+cores_comida = ((255, 0, 0), (255, 0, 127), (255, 127, 0), (255, 255, 0), (0, 255, 0), (0, 255, 255), (127, 0, 255))
+cores_sombra_comida = ((175, 0, 0), (175, 0, 87), (200, 87, 0), (175, 175, 0), (0, 175, 0), (0, 175, 175), (87, 0, 175))
 cor = randint(0, 6)
 
 pontos = 0
@@ -116,8 +117,10 @@ while True:
                 if event.key == K_LEFT or event.key == K_k:
                     x_personagem -= 40
 
-        destroy = pygame.draw.rect(tela, (0, 0, 255), (x_personagem, 560, 40, 40))
-        comida = pygame.draw.rect(tela, cores[cor], (x_comida, y_comida, 40, 40))
+        destroy_sombra = pygame.draw.rect(tela, (0, 0, 175), (x_personagem, 560, 40, 40))
+        destroy = pygame.draw.rect(tela, (0, 0, 255), (x_personagem + 5, 565, 30, 30))
+        comida_sombra = pygame.draw.rect(tela, cores_comida[cor], (x_comida, y_comida, 40, 40))
+        comida = pygame.draw.rect(tela, cores_sombra_comida[cor], (x_comida + 5, y_comida +5, 30, 30))
 
         if destroy.colliderect(comida):
             x_comida = (randint(0, 9)) * 40
@@ -158,7 +161,7 @@ while True:
                     posicao_tamanho = (100, 310, 200, 50),
                     texto_botao = 'INÍCIO',
                     cor_mensagem = (255, 255, 255),
-                    posicao_mensagem = (135, 325)
+                    posicao_mensagem = (173, 325)
                     ) == True:
                     tela_inicio()
 
