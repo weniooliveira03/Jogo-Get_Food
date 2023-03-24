@@ -94,6 +94,11 @@ while True:
         relogio.tick(30)
         tela.fill((cor_tela))
 
+        for i in range (1, 10):
+            grade = pygame.draw.line(tela, (57, 37, 67), (40 * i -1, 0), (40 * i -1, 600), 2)
+        for i in range (1, 15):
+            grade = pygame.draw.line(tela, (57, 37, 67), (0, 40 * i -1), (480, 40 * i -1), 2)
+
         m_pontos = f'Pontuação: {pontos}'
         m_erros = f'Erros: {erros}'
         m_final1 = f'Você Perdeu!'
