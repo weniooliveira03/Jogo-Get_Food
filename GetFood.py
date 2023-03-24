@@ -69,7 +69,7 @@ def tela_inicio():
 while True:
     tela.fill((cor_tela))
 
-    m_inicio = f'Controle o jogo usando K e L'
+    m_inicio = f'Controle o jogo usando U, I, O e P'
 
     exibir_m_inicio = fonte_inicio.render(m_inicio, True, (255, 255, 255))
 
@@ -78,7 +78,7 @@ while True:
             pygame.quit()
             exit()
 
-    tela.blit(exibir_m_inicio, (50, 350))
+    tela.blit(exibir_m_inicio, (35, 350))
 
     iniciar = botao(
         cor_botao = (0, 130, 0),
@@ -110,12 +110,22 @@ while True:
             if event.type == QUIT:
                 pygame.quit()
                 exit()
-            if event.type == KEYDOWN and x_personagem < 360:
-                if event.key == K_RIGHT or event.key == K_l:
+            if event.type == KEYDOWN and (event.key == K_d or event.key == K_o):
+                if x_personagem < 360:
                     x_personagem += 40
-            if event.type == KEYDOWN and x_personagem > 0:
-                if event.key == K_LEFT or event.key == K_k:
+            elif event.type == KEYDOWN and (event.key == K_s or event.key == K_i):
+                if x_personagem > 0:
                     x_personagem -= 40
+            elif event.type == KEYDOWN and (event.key == K_f or event.key == K_p):
+                if x_personagem == 320:
+                    x_personagem += 40
+                elif x_personagem < 320:
+                    x_personagem += 80
+            elif event.type == KEYDOWN and (event.key == K_a or event.key == K_u):
+                if x_personagem == 40:
+                    x_personagem -= 40
+                elif x_personagem > 40:
+                    x_personagem -= 80
 
         destroy_sombra = pygame.draw.rect(tela, (0, 0, 175), (x_personagem, 560, 40, 40))
         destroy = pygame.draw.rect(tela, (0, 0, 255), (x_personagem + 5, 565, 30, 30))
