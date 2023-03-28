@@ -13,8 +13,10 @@ x_personagem = 160
 x_comida = (randint(0, 9)) * 40
 y_comida = 0
 velocidade = 6
-cores_comida = ((255, 0, 0), (255, 0, 127), (255, 127, 0), (255, 255, 0), (0, 255, 0), (0, 255, 255), (127, 0, 255))
-cores_sombra_comida = ((175, 0, 0), (175, 0, 87), (200, 87, 0), (175, 175, 0), (0, 175, 0), (0, 175, 175), (87, 0, 175))
+aumento_velocidade = 2
+dificuldade = 'MÉDIA'
+cores_comida = ((255, 0, 0), (255, 0, 127), (255, 127, 0), (255, 255, 0), (0, 255, 0), (0, 255, 255), (127, 0, 255), (0, 125, 0))
+cores_sombra_comida = ((175, 0, 0), (175, 0, 87), (200, 87, 0), (175, 175, 0), (0, 175, 0), (0, 175, 175), (87, 0, 175), (0, 100, 0))
 cor = randint(0, 6)
 
 pontos = 0
@@ -36,7 +38,6 @@ iniciar = False
 
 
 def botao(cor_botao, posicao_tamanho, texto_botao, cor_mensagem, posicao_mensagem):
-    mouse = pygame.mouse.get_pos()
 
     exibir_sombra_botao = pygame.draw.rect(tela, (cor_botao[0] + 40, cor_botao[1] + 40, cor_botao[2] + 40), (posicao_tamanho))
 
@@ -48,7 +49,14 @@ def botao(cor_botao, posicao_tamanho, texto_botao, cor_mensagem, posicao_mensage
 
     if event.type == MOUSEBUTTONDOWN:
         if event.button == BUTTON_LEFT:
-            if (posicao_tamanho[0] < mouse[0] < (posicao_tamanho[0] + posicao_tamanho[2])) and (posicao_tamanho[1] < mouse[1] < (posicao_tamanho[1] + posicao_tamanho[3])):
+            if exibir_sombra_botao.collidepoint(event.pos):
+                exibir_sombra_botao = pygame.draw.rect(tela, (cor_botao[0] + 40, cor_botao[1] + 40, cor_botao[2] + 40), (posicao_tamanho[0] - 5, posicao_tamanho[1] -5, posicao_tamanho[2] + 10, posicao_tamanho[3] + 10))
+                exibir_botao = pygame.draw.rect(tela, (cor_botao), (posicao_tamanho[0], posicao_tamanho[1], posicao_tamanho[2], posicao_tamanho[3]))
+                tela.blit(exibir_texto_botao, (posicao_mensagem))
+    texto_botao = texto_botao
+    if event.type == MOUSEBUTTONUP:
+        if event.button == BUTTON_LEFT:
+            if exibir_sombra_botao.collidepoint(event.pos):
                 return True
             
 
@@ -57,7 +65,12 @@ def reiniciar():
     pontos = 0
     erros = 0
     perdeu = False
-    velocidade = 6
+    if dificuldade == 'FÁCIL':
+        velocidade = 4
+    elif dificuldade == 'MÉDIO':
+        velocidade = 6
+    else:
+        velocidade = 8
     level_pontos = 0
 
 def tela_inicio():
@@ -65,6 +78,47 @@ def tela_inicio():
 
     iniciar = False
     reiniciar()
+
+def tela_dificuldade():
+    global dificuldade, velocidade, aumento_velocidade, tela_dificudade_ativa
+    tela.fill((cor_tela))
+
+    if botao(
+        cor_botao = (0, 130, 0),
+        posicao_tamanho = (100, 215, 200, 50),
+        texto_botao = 'FÁCIL',
+        cor_mensagem = (255, 255, 255),
+        posicao_mensagem = (170, 230)
+        ):
+        dificuldade = 'FÁCIL'
+        velocidade = 4
+        aumento_velocidade = 1
+        tela_dificudade_ativa = False
+        
+    if botao(
+        cor_botao = (130, 130, 0),
+        posicao_tamanho = (100, 275, 200, 50),
+        texto_botao = 'MÉDIO',
+        cor_mensagem = (255, 255, 255),
+        posicao_mensagem = (165, 290)
+        ):
+        dificuldade = 'MÉDIO'
+        velocidade = 6
+        aumento_velocidade = 2
+        tela_dificudade_ativa = False
+
+    if botao(
+        cor_botao = (130, 0, 0),
+        posicao_tamanho = (100, 335, 200, 50),
+        texto_botao = 'DIFICIL',
+        cor_mensagem = (255, 255, 255),
+        posicao_mensagem = (165, 350)
+        ):
+        dificuldade = 'DIFÍCIL'
+        velocidade = 8
+        aumento_velocidade = 3
+        tela_dificudade_ativa = False
+    
 
 while True:
     tela.fill((cor_tela))
@@ -78,15 +132,32 @@ while True:
             pygame.quit()
             exit()
 
-    tela.blit(exibir_m_inicio, (35, 350))
+    tela.blit(exibir_m_inicio, (35, 380))
 
     iniciar = botao(
         cor_botao = (0, 130, 0),
-        posicao_tamanho = (100, 275, 200, 50),
+        posicao_tamanho = (100, 245, 200, 50),
         texto_botao = 'COMEÇAR',
         cor_mensagem = (255, 255, 255),
-        posicao_mensagem = (150, 290)
+        posicao_mensagem = (150, 260)
         )
+    tela_dificudade_ativa = botao(
+        cor_botao = (130, 0, 0),
+        posicao_tamanho = (100, 305, 200, 50),
+        texto_botao = 'DIFICULDADE',
+        cor_mensagem = (255, 255, 255),
+        posicao_mensagem = (135, 320)
+        )
+    while tela_dificudade_ativa:
+        relogio.tick(30)
+
+        for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    exit()
+
+        tela_dificuldade()
+        pygame.display.update()
 
     pygame.display.update()
 
@@ -132,12 +203,12 @@ while True:
                 elif x_personagem > 40:
                     x_personagem -= 80
 
-        destroy_sombra = pygame.draw.rect(tela, (0, 0, 175), (x_personagem, 560, 40, 40))
-        destroy = pygame.draw.rect(tela, (0, 0, 255), (x_personagem + 5, 565, 30, 30))
+        personagem_sombra = pygame.draw.rect(tela, (0, 0, 255), (x_personagem, 560, 40, 40))
+        personagem = pygame.draw.rect(tela, (0, 0, 175), (x_personagem + 5, 565, 30, 30))
         comida_sombra = pygame.draw.rect(tela, cores_comida[cor], (x_comida, y_comida, 40, 40))
         comida = pygame.draw.rect(tela, cores_sombra_comida[cor], (x_comida + 5, y_comida +5, 30, 30))
 
-        if destroy.colliderect(comida):
+        if personagem.colliderect(comida):
             x_comida = (randint(0, 9)) * 40
             y_comida = 0
             pontos += 1
@@ -145,7 +216,7 @@ while True:
             cor = randint(0, 6)
             if level_pontos == 10:
                 level_pontos = 0
-                velocidade += 2
+                velocidade += aumento_velocidade
 
         if y_comida <= altura:
             y_comida += velocidade
@@ -165,18 +236,18 @@ while True:
                         exit()
                 if botao(
                     cor_botao = (0, 130, 0),
-                    posicao_tamanho = (100, 240, 200, 50),
+                    posicao_tamanho = (100, 245, 200, 50),
                     texto_botao = 'RECOMEÇAR',
                     cor_mensagem = (255, 255, 255),
-                    posicao_mensagem = (135, 255)
+                    posicao_mensagem = (135, 260)
                     ) == True:
                     reiniciar()
                 if botao(
                     cor_botao = (150, 75, 0),
-                    posicao_tamanho = (100, 310, 200, 50),
+                    posicao_tamanho = (100, 305, 200, 50),
                     texto_botao = 'INÍCIO',
                     cor_mensagem = (255, 255, 255),
-                    posicao_mensagem = (173, 325)
+                    posicao_mensagem = (173, 320)
                     ) == True:
                     tela_inicio()
 
