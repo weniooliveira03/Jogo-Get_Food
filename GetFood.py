@@ -77,6 +77,7 @@ def botao(cor_botao = (0, 255, 0),
                 exibir_botao = pygame.draw.rect(tela, (cor_botao), (posicao_tamanho[0], posicao_tamanho[1], posicao_tamanho[2], posicao_tamanho[3]))
                 exibir_texto(
                  negrito = True,
+                 tamanho_fonte = tamanho_texto,
                  texto = texto_botao,
                  cor_texto = (cor_mensagem),
                  cor_background = (cor_botao),
@@ -213,6 +214,14 @@ while True:
             texto = f'Erros: {erros}',
             posicao_texto = (300, 10)
         )
+        if botao(
+            cor_botao = (215, 87, 0),
+            posicao_tamanho = (160, 5 , 80, 30),
+            texto_botao ='INÍCIO',
+            posicao_texto = (177, 12),
+            tamanho_texto = 15
+        ):
+            iniciar = False
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -279,7 +288,7 @@ while True:
                     posicao_tamanho = (100, 305, 200, 50),
                     texto_botao = 'INÍCIO',
                     cor_mensagem = (255, 255, 255),
-                    posicao_texto = (173, 320)
+                    posicao_texto = (172, 320)
                     ) == True:
                     tela_inicio()
                 exibir_texto(
