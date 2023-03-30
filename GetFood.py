@@ -27,9 +27,6 @@ tela = pygame.display.set_mode((largura, altura))
 cor_tela = (50, 30, 60)
 pygame.display.set_caption('Get Food')
 
-fonte = pygame.font.SysFont('arial', 25, True, False)
-fonte_inicio = pygame.font.SysFont('arial', 20, True, False)
-
 relogio = pygame.time.Clock()
 
 perdeu = False
@@ -37,22 +34,54 @@ perdeu = False
 iniciar = False
 
 
-def botao(cor_botao, posicao_tamanho, texto_botao, cor_mensagem, posicao_mensagem):
+def exibir_texto(nome_fonte = 'arial',
+                 tamanho_fonte = 20,
+                 negrito = False,
+                 italico = False,
+                 texto = 'Texto',
+                 cor_texto = (255, 255, 255),
+                 cor_background = (None),
+                 posicao_texto = (0, 0)
+                 ):
+    fonte = pygame.font.SysFont(nome_fonte, tamanho_fonte, negrito, italico)
+    texto_formatado = fonte.render(texto, True, cor_texto, cor_background)
+    tela.blit(texto_formatado, (posicao_texto), None, 0)
+
+
+def botao(cor_botao = (0, 255, 0),
+          posicao_tamanho =  (0, 0, 100, 50),
+          texto_botao = 'Botão',
+          cor_mensagem = (255, 255, 255),
+          posicao_texto = (0,0),
+          tamanho_texto = 20
+          ):
 
     exibir_sombra_botao = pygame.draw.rect(tela, (cor_botao[0] + 40, cor_botao[1] + 40, cor_botao[2] + 40), (posicao_tamanho))
 
     exibir_botao = pygame.draw.rect(tela, (cor_botao), (posicao_tamanho[0] + 5, posicao_tamanho[1] + 5, posicao_tamanho[2] - 10, posicao_tamanho[3] - 10))
     texto_botao = texto_botao
 
-    exibir_texto_botao = fonte_inicio.render(texto_botao, True, (cor_mensagem), (cor_botao))
-    tela.blit(exibir_texto_botao, (posicao_mensagem))
+    exibir_texto(
+        tamanho_fonte= tamanho_texto,
+        negrito = True,
+        texto = texto_botao,
+        cor_texto = (cor_mensagem),
+        cor_background = (cor_botao),
+        posicao_texto = (posicao_texto)
+        )
 
     if event.type == MOUSEBUTTONDOWN:
         if event.button == BUTTON_LEFT:
             if exibir_sombra_botao.collidepoint(event.pos):
                 exibir_sombra_botao = pygame.draw.rect(tela, (cor_botao[0] + 40, cor_botao[1] + 40, cor_botao[2] + 40), (posicao_tamanho[0] - 5, posicao_tamanho[1] -5, posicao_tamanho[2] + 10, posicao_tamanho[3] + 10))
                 exibir_botao = pygame.draw.rect(tela, (cor_botao), (posicao_tamanho[0], posicao_tamanho[1], posicao_tamanho[2], posicao_tamanho[3]))
-                tela.blit(exibir_texto_botao, (posicao_mensagem))
+                exibir_texto(
+                 negrito = True,
+                 texto = texto_botao,
+                 cor_texto = (cor_mensagem),
+                 cor_background = (cor_botao),
+                 posicao_texto = (posicao_texto)
+                 )
     texto_botao = texto_botao
     if event.type == MOUSEBUTTONUP:
         if event.button == BUTTON_LEFT:
@@ -88,7 +117,7 @@ def tela_dificuldade():
         posicao_tamanho = (100, 215, 200, 50),
         texto_botao = 'FÁCIL',
         cor_mensagem = (255, 255, 255),
-        posicao_mensagem = (170, 230)
+        posicao_texto = (170, 230)
         ):
         dificuldade = 'FÁCIL'
         velocidade = 4
@@ -100,7 +129,7 @@ def tela_dificuldade():
         posicao_tamanho = (100, 275, 200, 50),
         texto_botao = 'MÉDIO',
         cor_mensagem = (255, 255, 255),
-        posicao_mensagem = (165, 290)
+        posicao_texto = (165, 290)
         ):
         dificuldade = 'MÉDIO'
         velocidade = 6
@@ -112,7 +141,7 @@ def tela_dificuldade():
         posicao_tamanho = (100, 335, 200, 50),
         texto_botao = 'DIFICIL',
         cor_mensagem = (255, 255, 255),
-        posicao_mensagem = (165, 350)
+        posicao_texto = (165, 350)
         ):
         dificuldade = 'DIFÍCIL'
         velocidade = 8
@@ -123,30 +152,30 @@ def tela_dificuldade():
 while True:
     tela.fill((cor_tela))
 
-    m_inicio = f'Controle o jogo usando U, I, O e P'
-
-    exibir_m_inicio = fonte_inicio.render(m_inicio, True, (255, 255, 255))
+    exibir_texto(
+                 negrito = True,
+                 texto = 'Tecle U, I, O e P para controlar o jogo',
+                 posicao_texto = (20, 380)
+                 )
 
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             exit()
 
-    tela.blit(exibir_m_inicio, (35, 380))
-
     iniciar = botao(
         cor_botao = (0, 130, 0),
         posicao_tamanho = (100, 245, 200, 50),
         texto_botao = 'COMEÇAR',
         cor_mensagem = (255, 255, 255),
-        posicao_mensagem = (150, 260)
+        posicao_texto = (150, 260)
         )
     tela_dificudade_ativa = botao(
         cor_botao = (130, 0, 0),
         posicao_tamanho = (100, 305, 200, 50),
         texto_botao = 'DIFICULDADE',
         cor_mensagem = (255, 255, 255),
-        posicao_mensagem = (135, 320)
+        posicao_texto = (135, 320)
         )
     while tela_dificudade_ativa:
         relogio.tick(30)
@@ -170,17 +199,20 @@ while True:
         for i in range (1, 15):
             grade = pygame.draw.line(tela, (57, 37, 67), (0, 40 * i -1), (480, 40 * i -1), 2)
 
-        m_pontos = f'Pontuação: {pontos}'
-        m_erros = f'Erros: {erros}'
-        m_final1 = f'Você Perdeu!'
-        m_final2 = f'Sua pontuação: {pontos}'
-        m_final3 = f'Para recomeçar tecle espaço'
-
-        exibir_pontos = fonte.render(m_pontos, True, (0, 255, 0))
-        exibir_erros = fonte.render(m_erros, True, (255, 0, 0))
-        exibir_m_final1 = fonte.render(m_final1, True, (255, 0, 0))
-        exibir_m_final2 = fonte.render(m_final2, True, (0, 255, 0))
-        exibir_m_final3 = fonte.render(m_final3, True, (0, 255, 255))
+        exibir_texto(
+            tamanho_fonte = 25,
+            negrito = True,
+            cor_texto = (0, 255, 0),
+            texto = f'Pontos: {pontos}',
+            posicao_texto = (10, 10)
+        )
+        exibir_texto(
+            tamanho_fonte = 25,
+            negrito=True,
+            cor_texto = (255, 0, 0),
+            texto = f'Erros: {erros}',
+            posicao_texto = (300, 10)
+        )
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -239,7 +271,7 @@ while True:
                     posicao_tamanho = (100, 245, 200, 50),
                     texto_botao = 'RECOMEÇAR',
                     cor_mensagem = (255, 255, 255),
-                    posicao_mensagem = (135, 260)
+                    posicao_texto = (135, 260)
                     ) == True:
                     reiniciar()
                 if botao(
@@ -247,15 +279,22 @@ while True:
                     posicao_tamanho = (100, 305, 200, 50),
                     texto_botao = 'INÍCIO',
                     cor_mensagem = (255, 255, 255),
-                    posicao_mensagem = (173, 320)
+                    posicao_texto = (173, 320)
                     ) == True:
                     tela_inicio()
-
-                tela.blit(exibir_m_final1, (100, 150))
-                tela.blit(exibir_m_final2, (100, 190))
-
+                exibir_texto(
+                    tamanho_fonte = 25,
+                    negrito = True,
+                    texto = 'Você perdeu!',
+                    cor_texto = (255, 0, 0),
+                    posicao_texto = (100, 150)
+                )
+                exibir_texto(
+                    tamanho_fonte = 25,
+                    negrito = True,
+                    texto = f'Sua pontuação: {pontos}',
+                    cor_texto = (0, 255, 0),
+                    posicao_texto = (100, 190)
+                )
                 pygame.display.update()
-
-        tela.blit(exibir_pontos, (10, 10))
-        tela.blit(exibir_erros, (300, 10))
         pygame.display.update()
